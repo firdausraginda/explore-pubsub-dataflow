@@ -6,12 +6,12 @@ import json
 
 
 input_file = 'gs://dummy-bucket-files/dummy_text_1.txt'
-output_path = 'gs://dummy-bucket-files/result.txt'
+output_path = 'gs://dummy-bucket-files/word_count_result_1'
 
 beam_options = PipelineOptions(
     runner='DataflowRunner',
     project='another-dummy-project-337513',
-    job_name='dummy-job-1',
+    job_name='dummy-job-2',
     temp_location='gs://dummy-dataflow-temp/temp',
     region='us-central1'
 )
@@ -55,9 +55,14 @@ with beam.Pipeline() as p:
         # | 'print result json' >> beam.Map(print_data)
     )
 
+    # (
+    #     convert_to_json
+    #     | 'write to local' >> beam.io.WriteToText('result', 
+    #         file_name_suffix='.json'
+    #         )
+    # )
+
     (
         convert_to_json
-        | beam.io.WriteToText('result', 
-            file_name_suffix='.json'
-            )
+        | 'write to gcs' >> beam.io.WriteToText(output_path, file_name_suffix='.json')
     )
