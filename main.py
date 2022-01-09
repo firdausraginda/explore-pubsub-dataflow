@@ -105,7 +105,7 @@ with beam.Pipeline() as p:
         | 'convert to dictionary tabular format' >> beam.Map(convert_to_table_format)
         | 'flatten PCollection of lists to PCollection of strings' >> beam.FlatMap(lambda item: item)
         | 'write to bq' >> beam.io.WriteToBigQuery(
-            "another-dummy-project-337513:dummy_dataset.words_count_flatmap",
+            "another-dummy-project-337513:dummy_dataset.words_count",
             schema=word_count_schema,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
             write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
