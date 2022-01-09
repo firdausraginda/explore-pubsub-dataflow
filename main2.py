@@ -74,7 +74,40 @@ with beam.Pipeline() as p:
         | 'remove white spaces before and after string' >> beam.Map(lambda words: words.strip())
         | 'remove multiple white spaces between string' >> beam.Map(lambda words: re.sub(r' +', ' ', words))
         | 'split to list' >> beam.Map(lambda words: words.split(' '))
-        | 'print result' >> beam.Map(print)
+        # | 'print result' >> beam.Map(print)
+    )
+
+    count_in_json = (
+        pre_processing
+        | 'convert to json' >> beam.Map(count_words_in_json)
+    )
+
+    # serialize = (
+    #     count_in_json
+    #     | 'serialize' >> beam.Map(lambda data: json.dumps(data))
+    # )
+
+    # (
+    #     serialize
+    #     | 'write to local' >> beam.io.WriteToText('result', file_name_suffix='.json')
+    # )
+
+    # (
+    #     serialize
+    #     | 'write to gcs' >> beam.io.WriteToText(output_path, file_name_suffix='.json')
+    # )   
+
+    (
+        count_in_json
+        | 'convert to dictionary tabular format' >> beam.Map(convert_to_table_format)
+        | 'flatten PCollection of lists to PCollection of strings' >> beam.FlatMap(lambda item: item)
+        | 'write to bq' >> beam.io.WriteToBigQuery(
+            "another-dummy-project-337513:dummy_dataset.words_count_2",
+            schema=word_count_schema,
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+            write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
+            custom_gcs_temp_location='gs://dummy-dataflow-temp/temp'
+            )
     )
 
     

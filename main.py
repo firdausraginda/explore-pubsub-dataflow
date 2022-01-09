@@ -50,7 +50,7 @@ def write_to_bq(data):
     (
         data
         | 'write to bq' >> beam.io.WriteToBigQuery(
-            "another-dummy-project-337513:dummy_dataset.words_count",
+            "another-dummy-project-337513:dummy_dataset.words_count_func",
             schema=word_count_schema,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
             write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
@@ -77,30 +77,38 @@ with beam.Pipeline() as p:
         # | 'print result' >> beam.Map(print)
     )
 
-    count_in_json = (
+    count_as_json = (
         pre_processing
         | 'convert to json' >> beam.Map(count_words_in_json)
     )
 
     serialize = (
-        count_in_json
+        count_as_json
         | 'serialize' >> beam.Map(lambda data: json.dumps(data))
     )
 
+    # write to local as json file
     (
         serialize
         | 'write to local' >> beam.io.WriteToText('result', file_name_suffix='.json')
     )
 
+    # write to gcs as json file
     (
         serialize
         | 'write to gcs' >> beam.io.WriteToText(output_path, file_name_suffix='.json')
-    )   
-
-    (
-        count_in_json
-        | 'convert to dictionary tabular format' >> beam.Map(convert_to_table_format)
-        | 'write to bigquery table' >> beam.Map(lambda item: write_to_bq(item))
     )
 
-    
+    # write to bq table by loop the data using flatmap & lambda function
+    (
+        count_as_json
+        | 'convert to dictionary tabular format' >> beam.Map(convert_to_table_format)
+        | 'flatten PCollection of lists to PCollection of strings' >> beam.FlatMap(lambda item: item)
+        | 'write to bq' >> beam.io.WriteToBigQuery(
+            "another-dummy-project-337513:dummy_dataset.words_count_flatmap",
+            schema=word_count_schema,
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+            write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
+            custom_gcs_temp_location='gs://dummy-dataflow-temp/temp'
+            )
+    )
