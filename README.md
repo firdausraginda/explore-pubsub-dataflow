@@ -11,3 +11,4 @@
 * `createDispposition`, `writeDisposition`, `schema`, & **bigquery data type** : https://beam.apache.org/documentation/io/built-in/google-bigquery/#writing-to-bigquery
 * using `flatmap` in apache-beam: https://beam.apache.org/documentation/transforms/python/elementwise/flatmap/
 * using `pardo` in apache-beam: https://beam.apache.org/documentation/transforms/python/elementwise/pardo/
+* using `combineperkey` to count words: https://beam.apache.org/documentation/transforms/python/aggregation/combineperkey/

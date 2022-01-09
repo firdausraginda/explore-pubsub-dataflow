@@ -20,43 +20,13 @@ beam_options = PipelineOptions(
 setup_creds()
 
 
-def count_words_in_json(data):
-    json_ob = {}
-
-    for item in data:
-        if item in json_ob:
-            json_ob[item] += 1
-        else:
-            json_ob[item] = 1
-
-    return json_ob
-
-
 def convert_to_table_format(data):
-    tabular_dict_list = []
 
-    for key, value in data.items():
-        tabular_dict = {}
-
-        tabular_dict['word'] = key
-        tabular_dict['count'] = value
-
-        tabular_dict_list.append(tabular_dict)
+    tabular_dict = {}
+    tabular_dict['word'] = data[0]
+    tabular_dict['count'] = data[1]
     
-    return tabular_dict_list
-
-
-def write_to_bq(data):
-    (
-        data
-        | 'write to bq' >> beam.io.WriteToBigQuery(
-            "another-dummy-project-337513:dummy_dataset.words_count_func",
-            schema=word_count_schema,
-            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-            write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
-            custom_gcs_temp_location='gs://dummy-dataflow-temp/temp'
-            )
-    )
+    return tabular_dict
 
 
 word_count_schema = """
@@ -66,6 +36,7 @@ word_count_schema = """
 
 # with beam.Pipeline(options=beam_options) as p:
 with beam.Pipeline() as p:
+
     pre_processing = (
         p
         | 'read file' >> beam.io.ReadFromText(input_file)
@@ -74,12 +45,16 @@ with beam.Pipeline() as p:
         | 'remove white spaces before and after string' >> beam.Map(lambda words: words.strip())
         | 'remove multiple white spaces between string' >> beam.Map(lambda words: re.sub(r' +', ' ', words))
         | 'split to list' >> beam.Map(lambda words: words.split(' '))
+        | 'flatten PCollection lists of strings to PCollection of strings' >> beam.FlatMap(lambda word: word)
         # | 'print result' >> beam.Map(print)
     )
 
     count_as_json = (
         pre_processing
-        | 'convert to json' >> beam.Map(count_words_in_json)
+        | 'create tuple of words with num of appearances' >> beam.Map(lambda word: (word, 1))
+        | 'count words' >> beam.CombinePerKey(sum)
+        | 'convert to table format' >> beam.Map(convert_to_table_format)
+        # | beam.Map(print)
     )
 
     serialize = (
@@ -102,8 +77,6 @@ with beam.Pipeline() as p:
     # write to bq table by loop the data using flatmap & lambda function
     (
         count_as_json
-        | 'convert to dictionary tabular format' >> beam.Map(convert_to_table_format)
-        | 'flatten PCollection of lists to PCollection of strings' >> beam.FlatMap(lambda item: item)
         | 'write to bq' >> beam.io.WriteToBigQuery(
             "another-dummy-project-337513:dummy_dataset.words_count",
             schema=word_count_schema,
