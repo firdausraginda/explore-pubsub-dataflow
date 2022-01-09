@@ -8,3 +8,5 @@
 * using `'apache-beam[gcp]'`, will automatically create dataflow job when run the script
 * can create multiple job in dataflow with the same `job_name`
 * apache-beam runners: https://beam.apache.org/documentation/#available-runners
+* `WriteToBigquery` table shema definition: https://cloud.google.com/bigquery/docs/reference/rest/v2/tables#TableSchema
+* `writeDisposition` & `createDisposition` options: https://cloud.google.com/bigquery/docs/reference/rest/v2/Job

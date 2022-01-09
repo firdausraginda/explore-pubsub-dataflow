@@ -23,7 +23,7 @@ setup_creds()
 def print_data(data):
     print(data)
 
-def to_json(data):
+def count_words_in_json(data):
     json_ob = {}
 
     for item in data:
@@ -34,6 +34,25 @@ def to_json(data):
 
     return json_ob
 
+
+def convert_to_table_format(data):
+    tabular_dict_list = []
+
+    for key, value in data.items():
+        tabular_dict = {}
+
+        tabular_dict['word'] = key
+        tabular_dict['count'] = value
+
+        tabular_dict_list.append(tabular_dict)
+    
+    return tabular_dict_list
+
+
+word_count_schema = """
+    word:STRING,
+    count:INTEGER
+"""
 
 # with beam.Pipeline(options=beam_options) as p:
 with beam.Pipeline() as p:
@@ -48,21 +67,35 @@ with beam.Pipeline() as p:
         # | 'print result' >> beam.Map(print_data)
     )
 
-    convert_to_json = (
+    count_in_json = (
         pre_processing
-        | 'convert to json' >> beam.Map(to_json)
-        | 'serialize' >> beam.Map(lambda data: json.dumps(data))
+        | 'convert to json' >> beam.Map(count_words_in_json)
         # | 'print result json' >> beam.Map(print_data)
     )
 
     # (
-    #     convert_to_json
+    #     count_in_json
+    #     | 'serialize' >> beam.Map(lambda data: json.dumps(data))
     #     | 'write to local' >> beam.io.WriteToText('result', 
     #         file_name_suffix='.json'
     #         )
     # )
 
+    # (
+    #     count_in_json
+    #     | 'serialize' >> beam.Map(lambda data: json.dumps(data))
+    #     | 'write to gcs' >> beam.io.WriteToText(output_path, file_name_suffix='.json')
+    # )
+
     (
-        convert_to_json
-        | 'write to gcs' >> beam.io.WriteToText(output_path, file_name_suffix='.json')
+        count_in_json
+        | 'convert to dictionary tabular format' >> beam.Map(convert_to_table_format)
+        # | 'print result converted type' >> beam.Map(print_data)
+        | 'write to bq' >> beam.io.WriteToBigQuery(
+            "another-dummy-project-337513:dummy_dataset.words_count",
+            schema=word_count_schema,
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+            write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
+            custom_gcs_temp_location='gs://dummy-dataflow-temp/temp'
+        )
     )
