@@ -9,6 +9,6 @@
 * can create multiple job in dataflow with the same `job_name`
 * apache-beam runners: https://beam.apache.org/documentation/#available-runners
 * `createDispposition`, `writeDisposition`, `schema`, & **bigquery data type** : https://beam.apache.org/documentation/io/built-in/google-bigquery/#writing-to-bigquery
-* using `flatmap` in apache-beam: https://beam.apache.org/documentation/transforms/python/elementwise/flatmap/
-* using `pardo` in apache-beam: https://beam.apache.org/documentation/transforms/python/elementwise/pardo/
-* using `combineperkey` to count words: https://beam.apache.org/documentation/transforms/python/aggregation/combineperkey/
+* using `FlatMap` in apache-beam: https://beam.apache.org/documentation/transforms/python/elementwise/flatmap/
+* using `ParDo` in apache-beam: https://beam.apache.org/documentation/transforms/python/elementwise/pardo/
+* using `CombinePerKey` to count words: https://beam.apache.org/documentation/transforms/python/aggregation/combineperkey/
