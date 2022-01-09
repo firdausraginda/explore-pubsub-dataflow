@@ -20,6 +20,10 @@ beam_options = PipelineOptions(
 setup_creds()
 
 
+def print_data(data):
+    print(data)
+    print(type(data))
+
 def count_words_in_json(data):
     json_ob = {}
 
@@ -47,10 +51,11 @@ def convert_to_table_format(data):
 
 
 def write_to_bq(data):
+    # print(data)
     (
         data
         | 'write to bq' >> beam.io.WriteToBigQuery(
-            "another-dummy-project-337513:dummy_dataset.words_count",
+            "another-dummy-project-337513:dummy_dataset.words_count_testing",
             schema=word_count_schema,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
             write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
@@ -68,39 +73,21 @@ word_count_schema = """
 with beam.Pipeline() as p:
     pre_processing = (
         p
-        | 'read file' >> beam.io.ReadFromText(input_file)
-        | 'lowercase' >> beam.Map(lambda words: words.lower())
-        | 'remove symbols in string' >> beam.Map(lambda words: re.sub(r'[^\w]', ' ', words))
+        | 'read file' >> beam.io.ReadFromText('./dummy-text/test_text.txt')
+        | beam.Map(lambda words: words.lower())
+        | beam.Map(lambda words: re.sub(r'[^\w]', ' ', words))
         | 'remove white spaces before and after string' >> beam.Map(lambda words: words.strip())
         | 'remove multiple white spaces between string' >> beam.Map(lambda words: re.sub(r' +', ' ', words))
         | 'split to list' >> beam.Map(lambda words: words.split(' '))
-        # | 'print result' >> beam.Map(print)
+        # | 'print result' >> beam.Map(print_data)
     )
 
     count_in_json = (
         pre_processing
         | 'convert to json' >> beam.Map(count_words_in_json)
-    )
-
-    serialize = (
-        count_in_json
-        | 'serialize' >> beam.Map(lambda data: json.dumps(data))
-    )
-
-    (
-        serialize
-        | 'write to local' >> beam.io.WriteToText('result', file_name_suffix='.json')
-    )
-
-    (
-        serialize
-        | 'write to gcs' >> beam.io.WriteToText(output_path, file_name_suffix='.json')
-    )   
-
-    (
-        count_in_json
         | 'convert to dictionary tabular format' >> beam.Map(convert_to_table_format)
-        | 'write to bigquery table' >> beam.Map(lambda item: write_to_bq(item))
+        # | 'print result json' >> beam.Map(print_data)
+        | beam.Map(lambda item: write_to_bq(item))
     )
 
     
