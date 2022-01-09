@@ -19,7 +19,6 @@ beam_options = PipelineOptions(
 # setup credential gcp
 setup_creds()
 
-
 def convert_to_table_format(data):
 
     tabular_dict = {}
@@ -29,10 +28,14 @@ def convert_to_table_format(data):
     return tabular_dict
 
 
-word_count_schema = """
-    word:STRING,
-    count:INTEGER
-"""
+word_count_schema = {
+    'fields': [{
+        'name': 'word', 'type': 'STRING', 'mode': 'REQUIRED'
+    }, {
+        'name': 'count', 'type': 'INTEGER', 'mode': 'NULLABLE'
+    }]
+}
+
 
 # with beam.Pipeline(options=beam_options) as p:
 with beam.Pipeline() as p:
