@@ -10,3 +10,4 @@
 * apache-beam runners: https://beam.apache.org/documentation/#available-runners
 * `WriteToBigquery` table shema definition: https://cloud.google.com/bigquery/docs/reference/rest/v2/tables#TableSchema
 * `writeDisposition` & `createDisposition` options: https://cloud.google.com/bigquery/docs/reference/rest/v2/Job
+* `createDispposition`, `writeDisposition`, `schema`: https://beam.apache.org/documentation/io/built-in/google-bigquery/#writing-to-bigquery
