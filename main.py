@@ -77,7 +77,7 @@ with beam.Pipeline() as p:
         | 'write to gcs' >> beam.io.WriteToText(output_path, file_name_suffix='.json')
     )
 
-    # write to bq table by loop the data using flatmap & lambda function
+    # write to bq table
     (
         count_as_json
         | 'write to bq' >> beam.io.WriteToBigQuery(
