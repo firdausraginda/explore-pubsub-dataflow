@@ -17,8 +17,9 @@ beam_options = PipelineOptions(
 with beam.Pipeline(options=beam_options) as p:
     (
         p
-        | beam.io.ReadFromPubSub(
-                subscription='projects/another-dummy-project-337513/subscriptions/dummy-default-topic-sub'
+        | 'read from pubsub topic' >> beam.io.ReadFromPubSub(
+                topic='projects/another-dummy-project-337513/topics/dummy-default-topic',
             )
+        | 'convert bytes to string' >> beam.Map(lambda msg: msg.decode("utf-8") )
         | beam.Map(print)
     )
