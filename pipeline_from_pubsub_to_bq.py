@@ -15,17 +15,18 @@ def convert_to_table_format(data):
 setup_creds()
 
 
-# beam_options = PipelineOptions(
-#     runner='DataflowRunner',
-#     project='another-dummy-project-337513',
-#     job_name='dummy-job-2',
-#     temp_location='gs://dummy-dataflow-temp/temp',
-#     region='us-central1'
-# )
-
 beam_options = PipelineOptions(
+    runner='DataflowRunner',
+    project='another-dummy-project-337513',
+    job_name='pubsub-to-bq-2',
+    temp_location='gs://dummy-dataflow-temp/temp',
+    region='us-central1',
     streaming=True
 )
+
+# beam_options = PipelineOptions(
+#     streaming=True
+# )
 
 
 with beam.Pipeline(options=beam_options) as p:
@@ -41,8 +42,9 @@ with beam.Pipeline(options=beam_options) as p:
     (
         read_from_pubsub
         | 'convert to tabular format' >> beam.Map(convert_to_table_format)
+        # | beam.Map(print)
         | 'write to bq' >> beam.io.WriteToBigQuery(
-            "another-dummy-project-337513:dummy_dataset.words_count",
+            "another-dummy-project-337513:dummy_dataset.msg_pubsub",
             schema='message:STRING',
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
             write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
