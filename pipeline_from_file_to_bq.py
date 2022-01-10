@@ -5,6 +5,18 @@ import re
 import json
 
 
+def convert_to_table_format(data):
+
+    tabular_dict = {}
+    tabular_dict['word'] = data[0]
+    tabular_dict['count'] = data[1]
+    
+    return tabular_dict
+
+# setup credential gcp
+setup_creds()
+
+
 input_file = 'gs://dummy-bucket-files/dummy_text_1.txt'
 output_path = 'gs://dummy-bucket-files/word_count_result_1'
 
@@ -16,18 +28,6 @@ beam_options = PipelineOptions(
     region='us-central1'
 )
 
-# setup credential gcp
-setup_creds()
-
-def convert_to_table_format(data):
-
-    tabular_dict = {}
-    tabular_dict['word'] = data[0]
-    tabular_dict['count'] = data[1]
-    
-    return tabular_dict
-
-
 word_count_schema = {
     'fields': [{
         'name': 'word', 'type': 'STRING', 'mode': 'REQUIRED'
@@ -35,7 +35,6 @@ word_count_schema = {
         'name': 'count', 'type': 'INTEGER', 'mode': 'NULLABLE'
     }]
 }
-
 
 # with beam.Pipeline(options=beam_options) as p:
 with beam.Pipeline() as p:
