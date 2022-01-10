@@ -15,6 +15,7 @@ def convert_to_table_format(data):
 setup_creds()
 
 
+# PipelineOptions to create new dataflow job
 beam_options = PipelineOptions(
     runner='DataflowRunner',
     project='another-dummy-project-337513',
@@ -24,6 +25,7 @@ beam_options = PipelineOptions(
     streaming=True
 )
 
+# PipelineOptions for testing
 # beam_options = PipelineOptions(
 #     streaming=True
 # )
