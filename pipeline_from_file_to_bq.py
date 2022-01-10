@@ -13,6 +13,7 @@ def convert_to_table_format(data):
     
     return tabular_dict
 
+
 # setup credential gcp
 setup_creds()
 
@@ -35,6 +36,7 @@ word_count_schema = {
         'name': 'count', 'type': 'INTEGER', 'mode': 'NULLABLE'
     }]
 }
+
 
 # with beam.Pipeline(options=beam_options) as p:
 with beam.Pipeline() as p:
