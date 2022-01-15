@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 requests = "*"
 apache-beam = {extras = ["gcp"], version = "*"}
+google-cloud-bigtable = "*"
 
 [dev-packages]
 

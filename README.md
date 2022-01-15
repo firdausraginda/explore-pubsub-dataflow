@@ -2,6 +2,7 @@
 
 # dependency
 * install apache-beam for gcp: `pipenv install 'apache-beam[gcp]'`
+* install [google cloud bigtable](https://googleapis.dev/python/bigtable/latest/index.html): `pipenv install google-cloud-bigtable`
 
 # notes
 * `apache-beam` only works for python version 3.8.9 and below
