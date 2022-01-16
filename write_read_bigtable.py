@@ -31,18 +31,22 @@ def write_simple(table, row_key, column_family_id, data):
 
 def read_columns_per_row_key(table, row_key, column_family_id):
 
+    # get row based on given `row_key` & `column_family_id`
     row = table.read_row(row_key)
     rows = row.cells[column_family_id]
 
+    # loop over `column_id` in that row
     list_results = []
     for key in rows.keys():
-        dict_temp = {}
 
+        # loop over values in a `column_id`
         values_temp = []
         values = rows[key]
         for value in values:
             values_temp.append(value.value.decode("utf-8"))
-        
+
+        # create dictionary with key=`column_id` & value=values in a `column_id`
+        dict_temp = {}        
         key_decoded = key.decode("utf-8")
         dict_temp[key_decoded] = values_temp
         list_results.append(dict_temp)
@@ -52,10 +56,12 @@ def read_columns_per_row_key(table, row_key, column_family_id):
 
 def read_cell_by_column_id(table, row_key, column_family_id, column_id):
 
+    # get row based on given `row_key`, `column_family_id`, & `column_id`
     row = table.read_row(row_key)
     column_id_encoded = column_id.encode("utf-8")
     cols = row.cells[column_family_id][column_id_encoded]
     
+    # loop over `values` in given `column_id`
     values = []
     for col in cols:
         temp_val = col.value.decode("utf-8")
@@ -70,7 +76,7 @@ setup_creds()
 # setup bigtable
 table = bigtable_config()
 
-# define data
+# define data to insert
 row_key = 'hobbies_1'
 column_family_id = 'person_hobbies'
 person_hobbies = [
@@ -80,5 +86,5 @@ person_hobbies = [
 ]
 
 # write_simple(table, row_key, column_family_id, person_hobbies)
-read_columns_per_row_key(table, 'hobbies_1', 'person_hobbies')
-# read_cell_by_column_id(table, 'hobbies_1', 'person_hobbies', 'mike')
+read_columns_per_row_key(table, row_key, column_family_id)
+# read_cell_by_column_id(table, row_key, column_family_id, 'mike')
