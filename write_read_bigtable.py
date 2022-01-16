@@ -29,14 +29,21 @@ def write_simple(table, row_key, column_family_id, data):
     print("Successfully wrote row {}.".format(row_key))
 
 
-def read_row(table, row_key, column_family_id, column_id):
+def read_row(table, row_key, column_family_id):
 
     row = table.read_row(row_key.encode("utf-8"))
-    column_id = column_id.encode("utf-8")
-    value = row.cells[column_family_id][column_id]
+    rows = row.cells[column_family_id]
 
-    print(value)
-    print(len(value))
+    list_results = []
+    for key in rows.keys():
+        dict_temp = {}
+        value = rows[key][0].value
+
+        key_decoded = key.decode("utf-8")
+        dict_temp[key_decoded] = value.decode("utf-8")
+        list_results.append(dict_temp)
+
+    print(list_results)
 
 
 def read_cell_by_column_id(table, row_key, column_family_id, column_id):
@@ -69,5 +76,5 @@ person_hobbies = [
 ]
 
 # write_simple(table, row_key, column_family_id, person_hobbies)
-read_row(table, 'hobbies_1', 'person_hobbies', 'mike')
-read_cell_by_column_id(table, 'hobbies_1', 'person_hobbies', 'mike')
+read_row(table, 'hobbies_1', 'person_hobbies')
+# read_cell_by_column_id(table, 'hobbies_1', 'person_hobbies', 'mike')
