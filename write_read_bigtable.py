@@ -31,7 +31,7 @@ def write_simple(table, row_key, column_family_id, data):
 
 def read_row(table, row_key, column_family_id):
 
-    row = table.read_row(row_key.encode("utf-8"))
+    row = table.read_row(row_key)
     rows = row.cells[column_family_id]
 
     list_results = []
@@ -48,9 +48,9 @@ def read_row(table, row_key, column_family_id):
 
 def read_cell_by_column_id(table, row_key, column_family_id, column_id):
 
-    row = table.read_row(row_key.encode("utf-8"))
-    column_id = column_id.encode("utf-8")
-    cols = row.cells[column_family_id][column_id]
+    row = table.read_row(row_key)
+    column_id_encoded = column_id.encode("utf-8")
+    cols = row.cells[column_family_id][column_id_encoded]
     
     values = []
     for col in cols:
@@ -76,5 +76,5 @@ person_hobbies = [
 ]
 
 # write_simple(table, row_key, column_family_id, person_hobbies)
-read_row(table, 'hobbies_1', 'person_hobbies')
-# read_cell_by_column_id(table, 'hobbies_1', 'person_hobbies', 'mike')
+# read_row(table, 'hobbies_1', 'person_hobbies')
+read_cell_by_column_id(table, 'hobbies_1', 'person_hobbies', 'mike')
