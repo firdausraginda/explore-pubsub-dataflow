@@ -1,7 +1,6 @@
 import datetime
 from google.cloud import bigtable
 from setup_gcp import setup_creds
-import ast
 
 
 def write_simple(project_id, instance_id, table_id):
