@@ -29,7 +29,7 @@ def write_simple(table, row_key, column_family_id, data):
     print("Successfully wrote row {}.".format(row_key))
 
 
-def read_row(table, row_key, column_family_id):
+def read_columns_per_row_key(table, row_key, column_family_id):
 
     row = table.read_row(row_key)
     rows = row.cells[column_family_id]
@@ -76,5 +76,5 @@ person_hobbies = [
 ]
 
 # write_simple(table, row_key, column_family_id, person_hobbies)
-# read_row(table, 'hobbies_1', 'person_hobbies')
-read_cell_by_column_id(table, 'hobbies_1', 'person_hobbies', 'mike')
+read_columns_per_row_key(table, 'hobbies_1', 'person_hobbies')
+# read_cell_by_column_id(table, 'hobbies_1', 'person_hobbies', 'mike')
