@@ -28,7 +28,8 @@
 * setup cloud shell terminal to access bigtable: https://cloud.google.com/bigtable/docs/quickstart-cbt
 * cbt command list: https://cloud.google.com/bigtable/docs/cbt-reference
 * need to create the **columnfamily** first if want to insert data to bigtable via code. Can create **columnfamily** via gcp console or cloud shell
-* `write_read_bigtable.py` read ![data img](./bigtable-data.png) as dictionary:
+* `write_read_bigtable.py` will read bigtable data
+![data img](./bigtable-data.png) as python dictionary:
 ```
 [
     {'jhon': ['dancing']}, 
