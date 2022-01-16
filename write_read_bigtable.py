@@ -79,12 +79,17 @@ table = bigtable_config()
 # define data to insert
 row_key = 'hobbies_1'
 column_family_id = 'person_hobbies'
-person_hobbies = [
+person_hobbies_1 = [
     {'person': 'mike', 'hobby': 'swimming'},
     {'person': 'jhon', 'hobby': 'dancing'},
     {'person': 'melia', 'hobby': 'cooking'}
 ]
+person_hobbies_2 = [
+    {'person': 'mike', 'hobby': 'sleeping'},
+    {'person': 'ted', 'hobby': 'singing'}
+]
 
-# write_simple(table, row_key, column_family_id, person_hobbies)
+# write_simple(table, row_key, column_family_id, person_hobbies_1)
+# write_simple(table, row_key, column_family_id, person_hobbies_2)
 read_columns_per_row_key(table, row_key, column_family_id)
 # read_cell_by_column_id(table, row_key, column_family_id, 'mike')

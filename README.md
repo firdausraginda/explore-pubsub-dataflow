@@ -34,6 +34,7 @@
 [
     {'jhon': ['dancing']}, 
     {'melia': ['cooking']}, 
-    {'mike': ['sleeping', 'swimming']}
+    {'mike': ['sleeping', 'swimming']}, 
+    {'ted': ['singing']}
 ]
 ```
