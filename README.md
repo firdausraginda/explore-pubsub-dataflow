@@ -17,3 +17,6 @@
 
 * using `readfrompubsub`: https://beam.apache.org/releases/pydoc/2.8.0/apache_beam.io.gcp.pubsub.html?highlight=readfrompubsub
 * when pipeline read from pubsub, it has to be a **streaming** pipeline
+
+* write & read to cloud bigtable: https://cloud.google.com/bigtable/docs/reading-data#single-row
+* access bigtable via cloud shell terminal: https://cloud.google.com/bigtable/docs/quickstart-cbt
