@@ -23,16 +23,18 @@ def write_simple(project_id, instance_id, table_id):
     print("Successfully wrote row {}.".format(row_key))
 
 
-def read_row(project_id, instance_id, table_id):
+def read_rows(project_id, instance_id, table_id):
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
     row_key = "phone#4c410523#20190501"
-    row = table.read_row(row_key)
+    row = table.read_row(row_key.encode("utf-8"))
+    column_family_id = "stats_summary"
+    column_id = "connected_cell".encode("utf-8")
+    value = row.cells[column_family_id][column_id][0].value.decode("utf-8")
 
-    return row.cells
-    # return row.to_dict()
+    print(value)
 
 
 # setup credential gcp
@@ -43,6 +45,4 @@ instance_id = 'dummy-bt'
 table_id = 'dummy-table-bt'
 
 # write_simple(project_id, instance_id, table_id)
-result = read_row(project_id, instance_id, table_id)
-# print(result['stats_summary'])
-print(result['stats_summary'][b'connected_cell']['value'])
+read_rows(project_id, instance_id, table_id)

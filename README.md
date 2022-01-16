@@ -19,4 +19,4 @@
 * when pipeline read from pubsub, it has to be a **streaming** pipeline
 
 * write & read to cloud bigtable: https://cloud.google.com/bigtable/docs/reading-data#single-row
-* access bigtable via cloud shell terminal: https://cloud.google.com/bigtable/docs/quickstart-cbt
+* access bigtable via cloud shell terminal: https://cloud.google.com/bigtable/docs/quickstart-cbt, https://cloud.google.com/bigtable/docs/cbt-reference
