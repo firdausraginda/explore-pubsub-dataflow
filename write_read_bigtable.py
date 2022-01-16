@@ -37,10 +37,14 @@ def read_columns_per_row_key(table, row_key, column_family_id):
     list_results = []
     for key in rows.keys():
         dict_temp = {}
-        value = rows[key][0].value
 
+        values_temp = []
+        values = rows[key]
+        for value in values:
+            values_temp.append(value.value.decode("utf-8"))
+        
         key_decoded = key.decode("utf-8")
-        dict_temp[key_decoded] = value.decode("utf-8")
+        dict_temp[key_decoded] = values_temp
         list_results.append(dict_temp)
 
     print(list_results)
