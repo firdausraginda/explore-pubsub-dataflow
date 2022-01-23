@@ -7,6 +7,7 @@ name = "pypi"
 requests = "*"
 apache-beam = {extras = ["gcp"], version = "*"}
 google-cloud-bigtable = "*"
+protobuf = "*"
 
 [dev-packages]
 
