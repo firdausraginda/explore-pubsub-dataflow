@@ -19,7 +19,7 @@ def bigtable_config():
     return table
 
 
-def write_simple(table, row_key, column_family_id, data):
+def write_data(table, row_key, column_family_id, data):
 
     timestamp = datetime.datetime.utcnow()
     row = table.direct_row(row_key)
@@ -92,7 +92,7 @@ person_hobbies_2 = [
     {'person': 'ted', 'hobby': 'singing'}
 ]
 
-# write_simple(table, row_key, column_family_id, person_hobbies_1)
-# write_simple(table, row_key, column_family_id, person_hobbies_2)
+# write_data(table, row_key, column_family_id, person_hobbies_1)
+# write_data(table, row_key, column_family_id, person_hobbies_2)
 read_columns_per_row_key(table, row_key, column_family_id)
 read_cell_by_column_id(table, row_key, column_family_id, 'mike')
