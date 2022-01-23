@@ -36,10 +36,9 @@ def write_simple(table, row_key, column_family_id, dataset):
             person.hobbies.add(name=hobby)
 
         person_hobbies.person.append(person)
-        person_hobbies_in_bytes = person_hobbies.SerializeToString() # convert proto object to bytes
-
-        row.set_cell(column_family_id, 'data_1', person_hobbies_in_bytes, timestamp)
-
+        
+    person_hobbies_in_bytes = person_hobbies.SerializeToString() # convert proto object to bytes
+    row.set_cell(column_family_id, 'data_1', person_hobbies_in_bytes, timestamp)
     row.commit()
 
     print("Successfully wrote row {}.".format(row_key))
