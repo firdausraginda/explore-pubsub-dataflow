@@ -1,3 +1,6 @@
+import sys
+import pathlib
+sys.path.append(str(pathlib.Path(__file__).absolute().parent.parent))
 import datetime
 from google.cloud import bigtable
 from setup_gcp import setup_creds
@@ -92,4 +95,4 @@ person_hobbies_2 = [
 # write_simple(table, row_key, column_family_id, person_hobbies_1)
 # write_simple(table, row_key, column_family_id, person_hobbies_2)
 read_columns_per_row_key(table, row_key, column_family_id)
-# read_cell_by_column_id(table, row_key, column_family_id, 'mike')
+read_cell_by_column_id(table, row_key, column_family_id, 'mike')

@@ -30,7 +30,6 @@ def person_proto_object():
     return person_hobbies_pb2.Person()
 
 
-
 def write_simple(table, row_key, column_family_id, dataset):
 
     person_hobbies = person_hobbies_proto_object()
@@ -89,5 +88,5 @@ dataset = [
     {'person': 'edward', 'age': 23, 'hobbies': ['gaming', 'sky diving', 'basketball']}
 ]
 
-write_simple(table, row_key, column_family_id, dataset)
+# write_simple(table, row_key, column_family_id, dataset)
 read_bytes(table, row_key, column_family_id)
