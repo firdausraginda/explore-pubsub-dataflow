@@ -20,15 +20,26 @@ def bigtable_config():
     return table
 
 
+def person_hobbies_proto_object():
+
+    return person_hobbies_pb2.PersonHobbies()
+
+
+def person_proto_object():
+
+    return person_hobbies_pb2.Person()
+
+
+
 def write_simple(table, row_key, column_family_id, dataset):
 
-    person_hobbies = person_hobbies_pb2.PersonHobbies() # define `person hobbies` proto object
+    person_hobbies = person_hobbies_proto_object()
     timestamp = datetime.datetime.utcnow()
     row = table.direct_row(row_key)
 
     for data in dataset:
     
-        person = person_hobbies_pb2.Person() # define temporary `person` proto object
+        person = person_proto_object()
         person.name = data['person']
         person.age = data['age']
         
@@ -44,45 +55,21 @@ def write_simple(table, row_key, column_family_id, dataset):
     print("Successfully wrote row {}.".format(row_key))
 
 
-def read_columns_per_row_key(table, row_key, column_family_id):
+def read_bytes(table, row_key, column_family_id):
+
+    person_hobbies = person_hobbies_proto_object()
 
     # get row based on given `row_key` & `column_family_id`
     row = table.read_row(row_key)
     rows = row.cells[column_family_id]
 
-    # loop over `column_id` in that row
-    list_results = []
     for key in rows.keys():
-
-        # loop over values in a `column_id`
-        values_temp = []
         values = rows[key]
-        for value in values:
-            values_temp.append(value.value.decode("utf-8"))
+        data = values[0].value
 
-        # create dictionary with key=`column_id` & value=values in a `column_id`
-        dict_temp = {}        
-        key_decoded = key.decode("utf-8")
-        dict_temp[key_decoded] = values_temp
-        list_results.append(dict_temp)
+        person_hobbies.ParseFromString(data)
 
-    print(list_results)
-
-
-def read_cell_by_column_id(table, row_key, column_family_id, column_id):
-
-    # get row based on given `row_key`, `column_family_id`, & `column_id`
-    row = table.read_row(row_key)
-    column_id_encoded = column_id.encode("utf-8")
-    cols = row.cells[column_family_id][column_id_encoded]
-    
-    # loop over `values` in given `column_id`
-    values = []
-    for col in cols:
-        temp_val = col.value.decode("utf-8")
-        values.append(temp_val)
-
-    print(column_id, values)
+    print(person_hobbies)
 
 
 # setup credential gcp
@@ -94,11 +81,6 @@ table = bigtable_config()
 # define data to insert
 row_key = 'row#key#1'
 column_family_id = 'cf_hobbies'
-person_hobbies_1 = [
-    {'person': 'mike', 'hobby': 'swimming'},
-    {'person': 'jhon', 'hobby': 'dancing'},
-    {'person': 'melia', 'hobby': 'cooking'}
-]
 dataset = [
     {'person': 'melia', 'age': 23, 'hobbies': ['cooking']},
     {'person': 'mike', 'age': 22, 'hobbies': ['swimming', 'coding']},
@@ -108,5 +90,4 @@ dataset = [
 ]
 
 write_simple(table, row_key, column_family_id, dataset)
-# read_columns_per_row_key(table, row_key, column_family_id)
-# read_cell_by_column_id(table, row_key, column_family_id, 'mike')
+read_bytes(table, row_key, column_family_id)
