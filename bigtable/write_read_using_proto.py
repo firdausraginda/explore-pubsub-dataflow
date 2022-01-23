@@ -33,7 +33,6 @@ def person_proto_object():
 def write_data(table, row_key, column_family_id, dataset):
 
     person_hobbies = person_hobbies_proto_object()
-    timestamp = datetime.datetime.utcnow()
     row = table.direct_row(row_key)
 
     for data in dataset:
@@ -48,7 +47,30 @@ def write_data(table, row_key, column_family_id, dataset):
         person_hobbies.person.append(person)
         
     person_hobbies_in_bytes = person_hobbies.SerializeToString() # convert proto object to bytes
-    row.set_cell(column_family_id, 'data_1', person_hobbies_in_bytes, timestamp)
+    row.set_cell(column_family_id, 'data_1', person_hobbies_in_bytes)
+    row.commit()
+
+    print("Successfully wrote row {}.".format(row_key))
+
+
+def write_append(table, row_key, column_family_id, dataset):
+
+    person_hobbies = person_hobbies_proto_object()
+    row = table.row(row_key, append=True)
+
+    for data in dataset:
+    
+        person = person_proto_object()
+        person.name = data['person']
+        person.age = data['age']
+        
+        for hobby in data['hobbies']:
+            person.hobbies.add(name=hobby)
+
+        person_hobbies.person.append(person)
+        
+    person_hobbies_in_bytes = person_hobbies.SerializeToString() # convert proto object to bytes
+    row.append_cell_value(column_family_id, 'data_1', person_hobbies_in_bytes)
     row.commit()
 
     print("Successfully wrote row {}.".format(row_key))
@@ -87,6 +109,11 @@ dataset = [
     {'person': 'jane', 'age': 25, 'hobbies': ['gossip']},
     {'person': 'edward', 'age': 23, 'hobbies': ['gaming', 'sky diving', 'basketball']}
 ]
+dataset_additional = [
+    {'person': 'melia', 'age': 23, 'hobbies': ['cooking', 'make up']},
+    {'person': 'snow', 'age': 24, 'hobbies': ['hacking']}
+]
 
 # write_data(table, row_key, column_family_id, dataset)
+# write_append(table, row_key, column_family_id, dataset_additional)
 read_bytes(table, row_key, column_family_id)
