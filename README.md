@@ -22,9 +22,9 @@
 * using `readfrompubsub`: https://beam.apache.org/releases/pydoc/2.8.0/apache_beam.io.gcp.pubsub.html?highlight=readfrompubsub
 * when pipeline read from pubsub, it has to be a **streaming** pipeline
 
-
 ### deal with bigtable
 * write & read to cloud bigtable: https://cloud.google.com/bigtable/docs/reading-data#single-row
+* python bigtable row: https://googleapis.dev/python/bigtable/latest/row.html
 * setup cloud shell terminal to access bigtable: https://cloud.google.com/bigtable/docs/quickstart-cbt
 * cbt command list: https://cloud.google.com/bigtable/docs/cbt-reference
 * need to create the **columnfamily** first if want to insert data to bigtable via code. Can create **columnfamily** via gcp console or cloud shell
