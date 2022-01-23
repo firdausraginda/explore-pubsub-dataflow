@@ -64,9 +64,9 @@ def read_bytes(table, row_key, column_family_id):
 
     for key in rows.keys():
         values = rows[key]
-        data = values[0].value
 
-        person_hobbies.ParseFromString(data)
+        for value in values:
+            person_hobbies.ParseFromString(value.value)
 
     print(person_hobbies)
 
