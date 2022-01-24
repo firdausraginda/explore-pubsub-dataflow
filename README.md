@@ -67,7 +67,11 @@ input:
 ```
 
 stored on bigtable:
-![using proto](./bigtable-using-proto.png)
+```
+row#key#1
+  cf_hobbies:data_1                        @ 2022/01/24-02:40:56.542000
+    "\n\x14\n\x05melia\x10\x17\x1a\t\n\acooking\n\x1e\n\x04mike\x10\x16\x1a\n\n\bswimming\x1a\b\n\x06coding\n%\n\x06sundul\x10\x14\x1a\n\n\bsleeping\x1a\r\n\vread comics\n\x12\n\x04jane\x10\x19\x1a\b\n\x06gossip\n0\n\x06edward\x10\x17\x1a\b\n\x06gaming\x1a\f\n\nsky diving\x1a\f\n\nbasketball"
+```
 
 read:
 ```
