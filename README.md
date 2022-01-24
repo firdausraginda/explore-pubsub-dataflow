@@ -28,13 +28,94 @@
 * setup cloud shell terminal to access bigtable: https://cloud.google.com/bigtable/docs/quickstart-cbt
 * cbt command list: https://cloud.google.com/bigtable/docs/cbt-reference
 * need to create the **columnfamily** first if want to insert data to bigtable via code. Can create **columnfamily** via gcp console or cloud shell
-* `write_read_bigtable.py` will read bigtable data
-![data img](./bigtable-data.png) as python dictionary:
+
+#### bigtable data
+* `bigtable/write_read_without_proto.py` will read & write bigtable data as **normal** byte string:
+
+input:
+```
+[
+    {'person': 'mike', 'hobby': 'swimming'},
+    {'person': 'jhon', 'hobby': 'dancing'},
+    {'person': 'melia', 'hobby': 'cooking'}
+]
+```
+
+stored on bigtable:
+![without proto](./bigtable-without-proto.png)
+
+read:
 ```
 [
     {'jhon': ['dancing']}, 
     {'melia': ['cooking']}, 
-    {'mike': ['sleeping', 'swimming']}, 
-    {'ted': ['singing']}
+    {'mike': ['swimming']}
 ]
+```
+
+* `bigtable/write_read_using_proto.py` will read & write bigtable data as **dictionary** byte string:
+
+input:
+```
+[
+    {'person': 'melia', 'age': 23, 'hobbies': ['cooking']},
+    {'person': 'mike', 'age': 22, 'hobbies': ['swimming', 'coding']},
+    {'person': 'sundul', 'age': 20, 'hobbies': ['sleeping', 'read comics']},
+    {'person': 'jane', 'age': 25, 'hobbies': ['gossip']},
+    {'person': 'edward', 'age': 23, 'hobbies': ['gaming', 'sky diving', 'basketball']}
+]
+```
+
+stored on bigtable:
+![using proto](./bigtable-using-proto.png)
+
+read:
+```
+person {
+  name: "melia"
+  age: 23
+  hobbies {
+    name: "cooking"
+  }
+}
+person {
+  name: "mike"
+  age: 22
+  hobbies {
+    name: "swimming"
+  }
+  hobbies {
+    name: "coding"
+  }
+}
+person {
+  name: "sundul"
+  age: 20
+  hobbies {
+    name: "sleeping"
+  }
+  hobbies {
+    name: "read comics"
+  }
+}
+person {
+  name: "jane"
+  age: 25
+  hobbies {
+    name: "gossip"
+  }
+}
+person {
+  name: "edward"
+  age: 23
+  hobbies {
+    name: "gaming"
+  }
+  hobbies {
+    name: "sky diving"
+  }
+  hobbies {
+    name: "basketball"
+  }
+}
 ```
